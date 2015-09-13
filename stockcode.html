@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./css/font-awesome.min.css">
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.css" media="screen" title="no title" charset="utf-8">
+    <link rel="stylesheet" href="./css/style.css" media="screen" title="no title" charset="utf-8">
+    <script>
+        window.$ = window.jQuery = require('jquery');
+    </script>
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.js"></script>
+    <script>
+        /*
+         *サイドバーにセットする内容に適するようにデータ加工する。
+         */
+        function modifyPaths(filePaths, target) {
+            var modifiedPaths = [];
+            filePaths.forEach(function(filePath) {
+                modifiedPaths.push(filePath.replace(target, ""));
+            });
+            return modifiedPaths;
+        }
+
+        /**
+         *
+         *param target 対象となるエレメント
+         */
+        function pasteMarkdown() {
+
+        }
+        /**
+         *htmlエレメントを追加するためのメソッド
+         *param 対象となる要素(JQueryオブジェクト)
+         *param 追加する要素(JQueryオブジェクト)
+         */
+        function appendElement(target, newElement) {
+            target.append(newElement);
+        }
+        /**
+         *markdownで記述されたファイルのパスを受け取って内容を返す
+         */
+        function getContentsFromPath(path, marked) {
+            var contents = "";
+            return contents;
+        }
+        /**
+         *テキストを受け取ってリストで返す.直感的に使えるようにラップする
+         */
+        function spliteText(target, replaceStr) {
+            return target.split(replaceStr);
+        }
+
+        function joinListToText(list) {
+            var join = "";
+            for (var i = 0; i < list.length; i++) {
+                if (i == 0) {
+                    join = list[i];
+                } else {
+                    join += "/" + list[i];
+                }
+            }
+            return join;
+        }
+        $(document).ready(function() {
+            //初期化
+            var fileUtil = require("./fileUtil.js");
+            var fs = require("fs");
+            var mainObj = $('main');
+            var marked = require('marked');
+            var replaceText = __dirname + "/contents";
+            //指定したディレクトリの拡張子mdのファイルを取得
+            fileUtil.fetchMarkdown(__dirname, function(err, files) {
+                if (err) throw err;
+                var list_group = $(".list-group");
+                var modPaths = modifyPaths(files, replaceText);
+                for (var i = 0; i < modPaths.length; i++) {
+                    //エレメント作成・追加
+                    var list_tag = $('<button type="button" class="list-group-item"></button>');
+                    // var splitList = modPaths[i].split("/");
+                    // console.log(splitList);
+                    // appendElement(list_group, list_tag.text(splitList[splitList.length - 1]));
+                    appendElement(list_group, list_tag.text(modPaths[i]));
+                    //クラス名でjQueryオブジェクト取得
+                    var itemList = $(".list-group-item");
+                    var itemObj = $(itemList[i]);
+                    itemObj.on("click", function() {
+                        fs.readFile(replaceText + this.innerHTML, function(err, data) {
+                            var parsedText = marked(data.toString());
+                            mainObj.html('');
+                            mainObj.html(parsedText);
+                        });
+                    });
+                }
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#"><i class="fa fa-map-o"></i></a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="index.html">Link <span class="sr-only">(current)</span></a></li>
+                    <li><a href="#">Link</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Action</a></li>
+                            <li><a href="#">Another action</a></li>
+                            <li><a href="#">Something else here</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#">Separated link</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#">One more separated link</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <form class="navbar-form navbar-left" role="search">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search">
+                    </div>
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </form>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#">Link</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Action</a></li>
+                            <li><a href="#">Another action</a></li>
+                            <li><a href="#">Something else here</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#">Separated link</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+    <div class="list-group col-xs-4 col-md-4 col-lg-4">
+
+    </div>
+    <main class="bg-primary col-xs-8 col-md-8 col-lg-8">
+    </main>
+</body>
+
+</html>
