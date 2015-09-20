@@ -12,91 +12,7 @@
         window.$ = window.jQuery = require('jquery');
     </script>
     <script src="./node_modules/bootstrap/dist/js/bootstrap.js"></script>
-    <script>
-        /*
-         *サイドバーにセットする内容に適するようにデータ加工する。
-         */
-        function modifyPaths(filePaths, target) {
-            var modifiedPaths = [];
-            filePaths.forEach(function(filePath) {
-                modifiedPaths.push(filePath.replace(target, ""));
-            });
-            return modifiedPaths;
-        }
 
-        /**
-         *
-         *param target 対象となるエレメント
-         */
-        function pasteMarkdown() {
-
-        }
-        /**
-         *htmlエレメントを追加するためのメソッド
-         *param 対象となる要素(JQueryオブジェクト)
-         *param 追加する要素(JQueryオブジェクト)
-         */
-        function appendElement(target, newElement) {
-            target.append(newElement);
-        }
-        /**
-         *markdownで記述されたファイルのパスを受け取って内容を返す
-         */
-        function getContentsFromPath(path, marked) {
-            var contents = "";
-            return contents;
-        }
-        /**
-         *テキストを受け取ってリストで返す.直感的に使えるようにラップする
-         */
-        function spliteText(target, replaceStr) {
-            return target.split(replaceStr);
-        }
-
-        function joinListToText(list) {
-            var join = "";
-            for (var i = 0; i < list.length; i++) {
-                if (i == 0) {
-                    join = list[i];
-                } else {
-                    join += "/" + list[i];
-                }
-            }
-            return join;
-        }
-        $(document).ready(function() {
-            //初期化
-            var fileUtil = require("./fileUtil.js");
-            var fs = require("fs");
-            var mainObj = $('main');
-            var marked = require('marked');
-            var replaceText = __dirname + "/contents";
-            //指定したディレクトリの拡張子mdのファイルを取得
-            fileUtil.fetchMarkdown(__dirname, function(err, files) {
-                if (err) throw err;
-                var list_group = $(".list-group");
-                var modPaths = modifyPaths(files, replaceText);
-                for (var i = 0; i < modPaths.length; i++) {
-                    //エレメント作成・追加
-                    var list_tag = $('<button type="button" class="list-group-item"></button>');
-                    // var splitList = modPaths[i].split("/");
-                    // console.log(splitList);
-                    // appendElement(list_group, list_tag.text(splitList[splitList.length - 1]));
-                    appendElement(list_group, list_tag.text(modPaths[i]));
-                    //クラス名でjQueryオブジェクト取得
-                    var itemList = $(".list-group-item");
-                    var itemObj = $(itemList[i]);
-                    itemObj.on("click", function() {
-                        fs.readFile(replaceText + this.innerHTML, function(err, data) {
-                            var parsedText = marked(data.toString());
-                            mainObj.html('');
-                            mainObj.html(parsedText);
-                        });
-                    });
-                }
-            });
-        });
-    </script>
 </head>
 
 <body>
@@ -155,6 +71,71 @@
         </div>
         <!-- /.container-fluid -->
     </nav>
+    <script>
+        $(document).ready(function(){
+            $('.makeContents__save input').on('click', function(){
+                var marked = require('marked');
+                var contents = $('#contents').val();
+                var parsedText = marked(contents);
+                $('#parsed').html(parsedText);
+                // var api = require('./jsonApi');
+                var sqlite3 = require('sqlite3').verbose();
+                var db = new sqlite3.Database('./db/memo.db');
+
+                db.serialize(function(){
+
+                    var stmt = db.prepare('INSERT INTO table_user VALUES (?)');
+                    for(var i = 30; i < 40; i++){
+                        stmt.run(parsedText);
+                    }
+                    stmt.finalize();
+
+                    db.each("SELECT rowid AS id, info FROM table_user", function(err ,row){
+                        console.log(row.id + ":" + row.info );
+                    });
+                });
+            });
+        });
+    </script>
+    <div class="wrap">
+        <div class="makeContents">
+            <div class="makeContents__item">
+                <p class="makeContents__item__label">
+                    Category:
+                </p>
+                <select class="makeContents__item__input"  list="categoryList" name="name" value="">
+                    <option value>Choose Category</option>
+                    <option value="javascript">Java</option>
+                    <option value="php">javascrip</option>
+                    <option value="Ruby">php</option>
+                </select>
+            </div>
+            <div class="makeContents__item">
+                <p class="makeContents__item__label">
+                    Genre:
+                </p>
+                <select class="makeContents__item__input" list="categoryList" name="name" value="">
+                    <option value>Choose Genre</option>
+                    <option value="javascript">Java8</option>
+                    <option value="php">StremaAPI</option>
+                    <option value="Ruby">php</option>
+                </select>
+            </div>
+            <div class="makeContents__item">
+                <label class="makeContents__item__label" for="title">Title:</label>
+                <input class="makeContents__item__input" id="title" type="text" name="name" value="">
+            </div>
+            <div class="makeContents__item">
+                <label class="makeContents__item__label" for="contents">Contents:</label>
+                <textarea class="makeContents__item__input"id="contents" name="name" rows="8" cols="40"></textarea>
+            </div>
+            <div class="makeContents__save">
+                <input type="submit" name="name" value="save">
+            </div>
+        </div>
+        <div id="parsed">
+        </div>
+    </div>
     <div class="list-group col-xs-4 col-md-4 col-lg-4">
 
     </div>

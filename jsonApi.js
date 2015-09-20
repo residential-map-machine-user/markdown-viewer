@@ -56,56 +56,12 @@ module.exports = json ={
                 }
                 console.log(array);
                 console.log(array2);
-
             });
-
-            //forEachは同期的なメソッドらしい
-            //データの加工を進める
-            //ここからjsonオブジェクトを本格的に生成していくこととなる
-            //まずはカテゴリ-を作成する。
-            //分岐処理してカテゴリーなのかfileなのかを確認
-
             callback(null, modfiles);
         });
     }
 }
 
-function makeJsonObject(files){
-    //いらないところはreplaceで削除する
-    //"/"区切りで配列に格納する
-    //jsonでディレクトリ階層に応じてjsonのobjectを作成する.
-    //ここからは地道に比較して作成していく
-    var unitPath =[];
-     modfiles.forEach(function(file){
-        unitPath.push(file.replace(__dirname, ""));
-    });
-    // var jsonObj = {
-    //     category:[
-    //         java:{
-    //             contents:{
-    //                 name:"",
-    //                 path:""
-    //
-    //             }
-    //             subcategory:{
-    //                 contents:{
-    //                     name:"",
-    //                     path:""
-    //                 }
-    //                 path: ""
-    //             }
-    //         },
-    //         javascript:{},
-    //         rails:{}
-    //     ]
-    // };
-
-
-    return jsonObj;
-}
-function extractArrayAsElement(){
-
-}
 function matchAsFile(target){
     var re = /\.md/;
     return re.test(target);
