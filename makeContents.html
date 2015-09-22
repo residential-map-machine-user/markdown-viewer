@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.css" media="screen" title="no title" charset="utf-8">
+    <link rel="stylesheet" href="./css/main.css" media="screen" title="no title" charset="utf-8">
+    <script>
+        window.$ = window.jQuery = require('jquery');
+    </script>
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.js"></script>
+    <script>
+        $(document).ready(function(){
+            $()
+        });
+    </script>
+</head>
+
+<body>
+    <nav>
+        <div class="clearfix glNav">
+            <h3 class="glNav__logo">CodeStack</h3>
+            <ul class="glNav__list">
+                <a href="index.html" class="glNav__list__item glNav__list__item_state_active">
+                    Article
+                </a>
+                <a href="index.html" class="glNav__list__item">
+                    CodeStack
+                </a>
+            </ul>
+            <ul class="contentsManage">
+                <a href="makeContents.html" class="contetnsManage__btn conetensManage__btn_state_active" type="button" name="button">New</a>
+                <a href="makeContents.html" class="contetnsManage__btn" type="button" name="button">Edit</a>
+            </ul>
+        </div>
+    </nav>
+    <div class="wrap">
+        <div class="makeContents">
+            <div class="makeContents__item">
+                <p class="makeContents__item__label">
+                    Category:
+                </p>
+                <select class="makeContents__item__input" list="categoryList" name="name" value="">
+                    <option value>Choose Category</option>
+                    <option value="javascript">Java</option>
+                    <option value="php">javascrip</option>
+                    <option value="Ruby">php</option>
+                </select>
+            </div>
+            <div class="makeContents__item">
+                <p class="makeContents__item__label">
+                    Genre:
+                </p>
+                <select class="makeContents__item__input" list="categoryList" name="name" value="">
+                    <option value>Choose Genre</option>
+                    <option value="javascript">javascript</option>
+                    <option value="php">php</option>
+                    <option value="c++">ruby</option>
+                    <option value="bootstrap">bootstrap</option>
+                    <option value="createjs">createjs</option>
+                    <option value="photoshop">mysql</option>
+                    <option value="virtualmachine">virtual machine</option>
+                    <option value="nginx">nginx</option>
+                    <option value="nodejs">nodejs</option>
+                    <option value="layout">layout</option>
+                    <option value="systemintegrate">systemintegrate</option>
+                </select>
+            </div>
+            <div class="makeContents__item">
+                <label class="makeContents__item__label" for="title">Title:</label>
+                <input class="makeContents__item__input" id="title" type="text" name="name" value="">
+            </div>
+            <div class="makeContents__item">
+                <label class="makeContents__item__label" for="contents">Contents:</label>
+                <textarea class="makeContents__item__textarea" id="contents" name="name" rows="8" cols="40"></textarea>
+            </div>
+            <div class="makeContents__save">
+                <input type="submit" name="name" value="save">
+            </div>
+        </div>
+        <div id="parsed">
+        </div>
+    </div>
+</body>
+
+</html>
